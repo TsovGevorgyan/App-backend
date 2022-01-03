@@ -15,7 +15,6 @@ const authLev1 = async (req, res, next) => {
 
 
         const user = await User.findByPk(id)
-        const user2 = await User.findByPk(id)
 
 
         if (!user) {
