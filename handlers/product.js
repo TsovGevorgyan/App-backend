@@ -1,7 +1,6 @@
 const {Product} = require('../models')
-const {connect_timeout} = require("pg/lib/defaults");
 const productValidator = require('../validators/product')
-const {object} = require("joi");
+const {Op} = require("sequelize");
 
 const create = async (req, res) => {
     try {
@@ -14,7 +13,7 @@ const create = async (req, res) => {
         }
 
         const product = await Product.create({...req.body, userId: user.id})
-        res.json(product)
+        res.json({message: 'Product is successfully added', product})
     } catch (err) {
         return res.status(500).json({message: 'Something went wrong'})
     }
@@ -36,9 +35,39 @@ const find = async (req, res) => {
 const list = async (req, res) => {
 
     try {
-        const product = await Product.findAll()
-        res.status(200).json(product);
+        const {page = 1, rowPerPage = 10, ...search} = req.query
+        const limit = Number(rowPerPage)
+        const offset = (Number(page) - 1) * limit
+        const where = {}
+        for (const [field, value] of Object.entries(search)) {
+            switch (field) {
+                case 'name':
+                    where[field] = {[Op.iLike]: `%${value}%`}
+                    break
+                case 'priceMin':
+                    where.price = where.price || {}
+                    where['price'][Op.gte] = Number(value)
+
+                    break;
+                case 'priceMax':
+                    where.price = where.price || {}
+                    where['price'][Op.lte] = Number(value)
+                    break
+                default:
+                    where[field] = value
+                    break;
+            }
+        }
+        const products = await Product.findAndCountAll({
+            where,
+            offset,
+            limit,
+            orderBy:[['createdAt'],["ASC"]]
+        })
+
+        res.status(200).json(products);
     } catch (err) {
+        console.log(err)
         res.status(500).json({message: "Something went wrong"})
     }
 }
@@ -89,7 +118,6 @@ const remove = async (req, res) => {
         if (!product) {
             return res.json({message: 'Product is deleted'});
         }
-
     } catch (err) {
         res.status(500).json({message: "Something went wrong"})
     }

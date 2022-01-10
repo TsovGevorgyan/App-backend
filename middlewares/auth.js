@@ -13,8 +13,9 @@ const authLev1 = async (req, res, next) => {
         }
         const {id} = jwt.verify(token, jwtSecretKey)
 
+        console.log('token ID', id);
 
-        const user = await User.findByPk(id)
+        const user = await User.findByPk(id);
 
 
         if (!user) {

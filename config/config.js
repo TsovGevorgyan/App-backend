@@ -9,7 +9,7 @@ const development = {
     database: "Auth",
     host: process.env.DB_HOST,
     dialect: "postgres",
-    logging: false
+    logging: true
 }
 const config = {
     jwtSecretKey: process.env.JWT_SECRET_KEY
