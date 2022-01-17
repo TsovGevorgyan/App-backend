@@ -1,0 +1,8 @@
+node.js - login/registration - jwt token, postgreSql, express(), sequalise, migration, seed, middlewear for accessing home pages
+front --- reactjs, redux, saga
+
+home, login, registration, dashboard
+
+login, apiCall, registr, apiCall
+
+do postman calls 
