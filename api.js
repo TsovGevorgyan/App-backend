@@ -1,9 +1,13 @@
-const auth = require('./route/auth')
-const product = require('./route/product')
-const api = require('express').Router()
+const { Router } = require('express');
 
+const api = Router();
 
-api.use('/auth', auth)
-api.use('/product', product)
+const auth = require('./route/auth');
+const product = require('./route/product');
+const file = require('./route/file');
 
-module.exports = api
+api.use('/auth', auth);
+api.use('/product', product);
+api.use('/file', file);
+
+module.exports = api;

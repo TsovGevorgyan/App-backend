@@ -32,7 +32,7 @@ const login = async (req, res) => {
         if (error) {
             return res.status(400).json(error)
         }
-        console.log('req.body',req.body);
+
         const {email, password} = req.body;
         const user = await User.findOne({where: {email}})
         if (!user) {
